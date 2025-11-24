@@ -1,0 +1,31 @@
+{
+  "name": "@theshvdow/create-express-app",
+  "version": "1.0.1",
+  "description": "Un générateur de projet Express.js professionnel avec TypeScript, Prisma, Zod, Swagger, architecture modulaire et clean.",
+  "bin": {
+    "create-express-app": "bin/cli.js"
+  },
+  "type": "module",
+  "main": "bin/cli.js",
+  "scripts": {
+    "dev": "node bin/cli.js",
+    "publish": "npm publish --access public"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "express",
+    "typescript",
+    "generator",
+    "prisma",
+    "zod",
+    "swagger",
+    "cli"
+  ],
+  "author": "TheShvdow",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^9.2.0"
+  }
+}
