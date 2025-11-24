@@ -70,6 +70,15 @@ function copyRecursive(src, dest) {
   }
 }
 
+function updatePackageJson(projectPath, projectName) {
+  const pkgPath = path.join(projectPath, "package.json");
+  if (fs.existsSync(pkgPath)) {
+    let content = fs.readFileSync(pkgPath, "utf-8");
+    content = content.replace("{{PROJECT_NAME}}", projectName);
+    fs.writeFileSync(pkgPath, content);
+  }
+}
+
 function removeSwaggerFromApp(projectPath) {
   const appPath = path.join(projectPath, "src/app.ts");
   if (fs.existsSync(appPath)) {
@@ -130,10 +139,10 @@ if (!ask.defaultModule) {
 }
 
 // ==========================
-// 7️⃣ Initialisation du package npm
+// 7️⃣ Mise à jour du package.json
 // ==========================
-console.log("📦 Initialisation du projet npm...");
-execSync("npm init -y", { cwd: projectPath, stdio: "inherit" });
+console.log("📦 Configuration du package.json...");
+updatePackageJson(projectPath, projectName);
 
 // ==========================
 // 8️⃣ Installer les dépendances
