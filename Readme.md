@@ -96,6 +96,14 @@ Si Prisma est activé :
     │   └── migrations/
 ``` 
 
+### ⚙️ Requirements
+
+- Node.js v14 ou supérieur
+- npm, yarn ou pnpm
+- prisma (si activé) v6.X
+- Zod (si activé) v3.X
+- Swagger (si activé) v6.X
+
 ---
 ## Scripts disponibles
 - `npm run dev` : Démarrer le serveur en mode développement avec rechargement à chaud
