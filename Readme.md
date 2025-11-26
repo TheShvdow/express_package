@@ -47,7 +47,9 @@ Vous serez guidé par une série de questions :
 - Installer Swagger ? (oui / non)
 
 ### Structure du projet
+
 Après l’exécution, vous obtiendrez une structure de projet comme suit :
+
 ```
     
     
@@ -97,7 +99,7 @@ Si Prisma est activé :
     ├── prisma/
     │   ├── schema.prisma
     │   └── migrations/
-``` 
+```
 
 ### ⚙️ Requirements
 
@@ -108,7 +110,9 @@ Si Prisma est activé :
 - Swagger (si activé) v6.X
 
 ---
+
 ## Scripts disponibles
+
 - `npm run dev` : Démarrer le serveur en mode développement avec rechargement à chaud
 - `npm run build` : Compiler le projet TypeScript
 - `npm start` : Démarrer le serveur en mode production
@@ -119,25 +123,32 @@ Si Prisma est activé :
 - `npm run prisma:migrate` : Appliquer les migrations Prisma (si Prisma est activé)
 
 ### Swagger UI
+
 Si Swagger est activé, la documentation sera accessible à l’adresse : `http://localhost:3000/api-docs`
 
 ---
+
 ## 💡 Personnalisation
+
 Vous pouvez facilement personnaliser et étendre le projet selon vos besoins. La structure modulaire facilite l’ajout de nouvelles fonctionnalités, routes, services, etc.
 
 ---
+
 ## 🤝 Contribution
+
 Les contributions sont les bienvenues ! N’hésitez pas à ouvrir des issues ou des pull requests pour améliorer ce projet.
 
 ---
 
 ### Support
+
 Pour toute question ou problème, veuillez ouvrir une issue sur le dépôt GitHub.
-👉 https://www.npmjs.com/package/@theshvdow/create-express-project
+👉 [https://www.npmjs.com/package/@theshvdow/create-express-app](https://github.com/TheShvdow/express_package/issues)
 
 ## 📄 Licence
+
 Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
 
 All rights reserved © 2024 TheShvdow
 
-### Merci d’utiliser `@theshvdow/create-express-project` ! 🚀
+### Merci d’utiliser `@theshvdow/create-express-app` ! 🚀
