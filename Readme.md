@@ -18,6 +18,9 @@ Il inclut :
 
 ## 📥 Installation
 
+Ne pas Utiliser `npm i @theshvdow/create-express-app` pour installer ce package il fonctionnera pas.
+
+Au lieu de cela, utilisez `npx` pour exécuter le générateur directement sans installation globale :
 
 ```bash
 npx @theshvdow/create-express-app <nom-du-projet>
