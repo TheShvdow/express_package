@@ -173,14 +173,27 @@ const options: swaggerJsdoc.Options = {
     ],
   },
   apis: [
-    "./src/infrastructre/http/routers/*.ts",
-    "./src/core/swagger/schemas/*.ts",
+    "./src/infrastructre/http/routers/**/*.{ts,js}",
+    "./src/core/swagger/schemas/**/*.{ts,js}",
+    "./dist/infrastructre/http/routers/**/*.js",
+    "./dist/core/swagger/schemas/**/*.js",
   ],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
 export const setupSwagger = (app: Express): void => {
+  // Log pour déboguer
+  console.log("🔍 Initializing Swagger...");
+  console.log("📁 API paths:", options.apis);
+
+  // Vérifier si la spec contient des routes
+  if (swaggerSpec && swaggerSpec.paths) {
+    console.log("✅ Swagger spec loaded with", Object.keys(swaggerSpec.paths).length, "routes");
+  } else {
+    console.warn("⚠️  No routes found in Swagger spec. Check your JSDoc comments.");
+  }
+
   // Swagger UI
   app.use(
     "/api-docs",
@@ -204,7 +217,7 @@ export const setupSwagger = (app: Express): void => {
     res.send(swaggerSpec);
   });
 
-  console.log("📚 Swagger documentation available at /api-docs");
+  console.log("📚 Swagger documentation available at http://localhost:8000/api-docs");
 };
 
 export { swaggerSpec };

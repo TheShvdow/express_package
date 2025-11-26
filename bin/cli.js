@@ -153,8 +153,8 @@ const deps = ["express", "cors", "helmet", "dotenv"];
 const devDeps = ["typescript", "ts-node", "nodemon", "@types/node", "@types/express", "@types/cors", "@types/helmet"];
 
 if (ask.prisma) {
-  deps.push("@prisma/client");
-  devDeps.push("prisma");
+  deps.push("@prisma/client@6.16.0");
+  devDeps.push("prisma@6.16.0");
 }
 
 if (ask.swagger) {
@@ -164,6 +164,7 @@ if (ask.swagger) {
 
 if (ask.zod) {
   deps.push("zod");
+  
 }
 
 execSync(`npm install ${deps.join(" ")}`, { cwd: projectPath, stdio: "inherit" });

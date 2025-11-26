@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import { router } from "./infrastructre/http/routers/index";
 import { ErrorHandler } from "./infrastructre/http/middleware/ErrorHandler";
@@ -15,6 +15,15 @@ export const createApp = () => {
   // @swagger-setup
   setupSwagger(app);
   // @end-swagger-setup
+
+  // Route de test
+  app.get("/", (_req: Request, res: Response) => {
+    res.json({
+      message: "API is running",
+      documentation: "/api-docs",
+      health: "/api/health",
+    });
+  });
 
   app.use("/api", router);
 
