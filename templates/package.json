@@ -8,8 +8,9 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "{{DEV_SCRIPT}}",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/server.js",
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio"
