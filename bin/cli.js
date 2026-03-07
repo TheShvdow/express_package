@@ -174,11 +174,11 @@ function updatePackageJson(projectPath, projectName, pm) {
   const devScript =
     pm === "bun"
       ? "bun --watch src/server.ts"
-      : "nodemon --exec \"ts-node --transpile-only\" src/server.ts";
-  let content = fs.readFileSync(pkgPath, "utf-8");
-  content = content.replace("{{PROJECT_NAME}}", projectName);
-  content = content.replace("{{DEV_SCRIPT}}", devScript);
-  fs.writeFileSync(pkgPath, content, "utf-8");
+      : "nodemon --exec 'ts-node --transpile-only' src/server.ts";
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
+  pkg.name = projectName;
+  pkg.scripts.dev = devScript;
+  fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n", "utf-8");
 }
 
 function removeSwaggerFromApp(projectPath) {

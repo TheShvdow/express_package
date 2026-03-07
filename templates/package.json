@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "{{DEV_SCRIPT}}",
+    "dev": "nodemon --exec 'ts-node --transpile-only' src/server.ts",
     "build": "prisma generate && tsc",
     "start": "node dist/server.js",
     "postinstall": "prisma generate",

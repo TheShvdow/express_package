@@ -1,6 +1,6 @@
 {
   "name": "@theshvdow/simply-express",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "CLI Express.js + TypeScript production-ready — scaffold a clean architecture project in seconds.",
   "bin": {
     "simply-express": "bin/cli.js"
