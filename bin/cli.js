@@ -136,7 +136,7 @@ function updatePackageJson(projectPath, projectName, pm) {
   const devScript =
     pm === "bun"
       ? "bun --watch src/server.ts"
-      : "nodemon --exec ts-node src/server.ts";
+      : "nodemon --exec \"ts-node --transpile-only\" src/server.ts";
   let content = fs.readFileSync(pkgPath, "utf-8");
   content = content.replace("{{PROJECT_NAME}}", projectName);
   content = content.replace("{{DEV_SCRIPT}}", devScript);

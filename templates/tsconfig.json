@@ -13,5 +13,5 @@
     "typeRoots": ["./src/types", "./node_modules/@types"]
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "src/generated"]
+  "exclude": ["node_modules", "dist", "src/generated", "src/infrastructure/prisma/client.ts"]
 }
