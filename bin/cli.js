@@ -11,62 +11,101 @@ const __dirname = path.dirname(__filename);
 const templatesDir = path.join(__dirname, "../templates");
 const templatesAuthDir = path.join(__dirname, "../templates-auth");
 
-// ─── ANSI colors (zero deps) ──────────────────────────────────────────────────
+const VERSION = "1.1.4";
+
+// ─── ANSI colors ──────────────────────────────────────────────────────────────
 const c = {
-  reset:  "\x1b[0m",
-  bold:   "\x1b[1m",
-  dim:    "\x1b[2m",
-  cyan:   "\x1b[36m",
-  green:  "\x1b[32m",
-  yellow: "\x1b[33m",
-  red:    "\x1b[31m",
-  blue:   "\x1b[34m",
-  magenta:"\x1b[35m",
-  white:  "\x1b[37m",
-  gray:   "\x1b[90m",
+  reset:   "\x1b[0m",
+  bold:    "\x1b[1m",
+  dim:     "\x1b[2m",
+  cyan:    "\x1b[36m",
+  green:   "\x1b[32m",
+  yellow:  "\x1b[33m",
+  red:     "\x1b[31m",
+  blue:    "\x1b[34m",
+  magenta: "\x1b[35m",
+  white:   "\x1b[37m",
+  gray:    "\x1b[90m",
+  // Bright variants
+  bcyan:   "\x1b[96m",
+  bgreen:  "\x1b[92m",
+  bblue:   "\x1b[94m",
+  bwhite:  "\x1b[97m",
 };
 
-const fmt = {
-  step:    (s) => `${c.cyan}${c.bold}  ◆${c.reset}  ${s}`,
-  success: (s) => `${c.green}${c.bold}  ✔${c.reset}  ${s}`,
-  warn:    (s) => `${c.yellow}${c.bold}  ⚠${c.reset}  ${s}`,
-  error:   (s) => `${c.red}${c.bold}  ✖${c.reset}  ${s}`,
-  info:    (s) => `${c.gray}     ${s}${c.reset}`,
-  code:    (s) => `${c.gray}  $${c.reset}  ${c.cyan}${s}${c.reset}`,
-  label:   (s) => `${c.bold}${c.white}${s}${c.reset}`,
-  tag:     (s) => `${c.magenta}${c.bold}${s}${c.reset}`,
-  dim:     (s) => `${c.gray}${s}${c.reset}`,
-  divider: ()  => `${c.gray}  ${"─".repeat(50)}${c.reset}`,
-};
+// Simulated gradient: each line of the ASCII art gets a slightly different shade
+const GRADIENT = [c.bblue, c.bcyan, c.bcyan, c.cyan, c.cyan, c.blue];
 
 function print(...args) { console.log(...args); }
 
+// ─── Banner ───────────────────────────────────────────────────────────────────
 function banner() {
+  const art = [
+    "  ███████╗██╗███╗   ███╗██████╗ ██╗  ██╗   ██╗",
+    "  ██╔════╝██║████╗ ████║██╔══██╗██║  ╚██╗ ██╔╝",
+    "  ███████╗██║██╔████╔██║██████╔╝██║   ╚████╔╝ ",
+    "  ╚════██║██║██║╚██╔╝██║██╔═══╝ ██║    ╚██╔╝  ",
+    "  ███████║██║██║ ╚═╝ ██║██║     ███████╗██║   ",
+    "  ╚══════╝╚═╝╚═╝     ╚═╝╚═╝     ╚══════╝╚═╝   ",
+  ];
   print();
-  print(`${c.cyan}${c.bold}   ╔═══════════════════════════════════════╗${c.reset}`);
-  print(`${c.cyan}${c.bold}   ║${c.reset}  ${c.bold}${c.white}create-express-app${c.reset}  ${c.gray}by TheShvdow${c.reset}   ${c.cyan}${c.bold}║${c.reset}`);
-  print(`${c.cyan}${c.bold}   ╚═══════════════════════════════════════╝${c.reset}`);
-  print(fmt.dim("   Express · TypeScript · Clean Architecture"));
+  art.forEach((line, i) => {
+    print(`${GRADIENT[i] || c.cyan}${c.bold}${line}${c.reset}`);
+  });
+  print(`${c.bcyan}${c.bold}             ✦  E X P R E S S  ✦${c.reset}`);
+  print();
+  print(`${c.gray}  v${VERSION}  ·  Express · TypeScript · Clean Architecture${c.reset}`);
+  print(`${c.gray}  by ${c.cyan}TheShvdow${c.gray}  ·  github.com/TheShvdow/express_package${c.reset}`);
   print();
 }
 
+// ─── Section header ───────────────────────────────────────────────────────────
+function sectionHeader(title) {
+  const width = 44;
+  const bar = "─".repeat(width);
+  print(`${c.cyan}  ┌${bar}┐${c.reset}`);
+  print(`${c.cyan}  │${c.reset}  ${c.bold}${c.bwhite}${title}${c.reset}${" ".repeat(Math.max(0, width - title.length - 1))}${c.cyan}│${c.reset}`);
+  print(`${c.cyan}  └${bar}┘${c.reset}`);
+  print();
+}
+
+// ─── Spinner ──────────────────────────────────────────────────────────────────
 function spinner(message) {
   const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
   let i = 0;
   const interval = setInterval(() => {
-    process.stdout.write(`\r${c.cyan}  ${frames[i++ % frames.length]}${c.reset}  ${message}`);
+    process.stdout.write(
+      `\r  ${c.bcyan}${frames[i++ % frames.length]}${c.reset}  ${c.bold}${message}${c.reset}${c.gray}...${c.reset}`
+    );
   }, 80);
   return {
     succeed(msg) {
       clearInterval(interval);
-      process.stdout.write(`\r${fmt.success(msg || message)}\n`);
+      process.stdout.write(
+        `\r  ${c.bgreen}✔${c.reset}  ${c.bold}${msg || message}${c.reset}` + " ".repeat(10) + "\n"
+      );
     },
     fail(msg) {
       clearInterval(interval);
-      process.stdout.write(`\r${fmt.error(msg || message)}\n`);
+      process.stdout.write(
+        `\r  ${c.red}✖${c.reset}  ${c.bold}${msg || message}${c.reset}` + " ".repeat(10) + "\n"
+      );
     },
   };
 }
+
+// ─── fmt helpers ──────────────────────────────────────────────────────────────
+const fmt = {
+  step:    (s) => `  ${c.bcyan}◆${c.reset}  ${s}`,
+  success: (s) => `  ${c.bgreen}✔${c.reset}  ${s}`,
+  warn:    (s) => `  ${c.yellow}⚠${c.reset}  ${s}`,
+  error:   (s) => `  ${c.red}✖${c.reset}  ${s}`,
+  info:    (s) => `${c.gray}     ${s}${c.reset}`,
+  code:    (s) => `  ${c.gray}$${c.reset}  ${c.bcyan}${s}${c.reset}`,
+  dim:     (s) => `${c.gray}${s}${c.reset}`,
+  divider: ()  => `${c.gray}  ${"─".repeat(46)}${c.reset}`,
+  tag:     (s) => `${c.magenta}${c.bold}${s}${c.reset}`,
+};
 
 // ─── Package manager config ───────────────────────────────────────────────────
 const PM = {
@@ -82,7 +121,6 @@ const PACKAGES = {
     deps: ["express", "cors", "helmet", "dotenv", "pino"],
     devDeps: {
       common: ["typescript", "@types/node", "@types/express", "@types/cors", "@types/helmet", "pino-pretty"],
-      // bun a son propre runtime — pas besoin de ts-node/nodemon
       node:   ["ts-node", "nodemon"],
     },
   },
@@ -146,11 +184,9 @@ function updatePackageJson(projectPath, projectName, pm) {
 function removeSwaggerFromApp(projectPath) {
   const appPath = path.join(projectPath, "src/app.ts");
   if (!fs.existsSync(appPath)) return;
-
   let content = fs.readFileSync(appPath, "utf-8").replace(/\r\n/g, "\n");
   const importPattern = /\/\/ @swagger-import\n[\s\S]*?\/\/ @end-swagger-import\n/;
   const setupPattern  = /\n\s*\/\/ @swagger-setup\n[\s\S]*?\/\/ @end-swagger-setup/;
-
   content = content.replace(importPattern, "");
   content = content.replace(setupPattern, "");
   fs.writeFileSync(appPath, content, "utf-8");
@@ -162,7 +198,7 @@ function generateEnvExample(projectPath, options) {
     "",
     "NODE_ENV=development",
     "PORT=8000",
-    "ALLOWED_ORIGINS=http://localhost:3000",
+    "ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8000",
   ];
   if (options.prisma) {
     lines.push("", "# Prisma / Base de données");
@@ -201,25 +237,82 @@ function runOrCleanup(command, execOptions, projectPath, projectName) {
 }
 
 // ─── Summary box ──────────────────────────────────────────────────────────────
-
 function printSummary(projectName, projectType, ask) {
-  const badges = [];
-  if (ask.prisma)  badges.push(`${c.blue}Prisma${c.reset}`);
-  if (ask.zod)     badges.push(`${c.green}Zod${c.reset}`);
-  if (ask.swagger) badges.push(`${c.yellow}Swagger${c.reset}`);
-  if (ask.auth)    badges.push(`${c.magenta}JWT Auth${c.reset}`);
+  const width = 44;
+  const pad = (label, value) => {
+    const line = `  ${c.gray}${label.padEnd(10)}${c.reset}${c.cyan}›${c.reset}  ${value}`;
+    return line;
+  };
+
+  const plugins = [];
+  if (ask.prisma)  plugins.push(`${c.blue}${c.bold}Prisma${c.reset}`);
+  if (ask.zod)     plugins.push(`${c.green}${c.bold}Zod${c.reset}`);
+  if (ask.swagger) plugins.push(`${c.yellow}${c.bold}Swagger${c.reset}`);
+  if (ask.auth)    plugins.push(`${c.magenta}${c.bold}JWT Auth${c.reset}`);
+
+  const modeLabel = projectType === "auth"
+    ? `${c.magenta}${c.bold}Starter Kit Auth${c.reset}`
+    : `${c.bcyan}${c.bold}Minimal${c.reset}`;
 
   print();
-  print(fmt.divider());
-  print(`${c.gray}  Récapitulatif${c.reset}`);
-  print(fmt.divider());
-  print(fmt.info(`Projet       ${c.bold}${c.white}${projectName}${c.reset}`));
-  print(fmt.info(`Mode         ${projectType === "auth" ? fmt.tag("Starter Kit Auth") : `${c.cyan}${c.bold}Minimal${c.reset}`}`));
-  print(fmt.info(`Package mgr  ${c.bold}${ask.packageManager}${c.reset}`));
-  if (badges.length > 0) {
-    print(fmt.info(`Inclus       ${badges.join("  ")}`));
+  print(`  ${c.cyan}╭${"─".repeat(width)}╮${c.reset}`);
+  print(`  ${c.cyan}│${c.reset}  ${c.bold}${c.bwhite}📦  ${projectName}${c.reset}${" ".repeat(Math.max(0, width - projectName.length - 4))}${c.cyan}│${c.reset}`);
+  print(`  ${c.cyan}│${c.reset}  ${c.gray}${"─".repeat(width - 2)}${c.reset}  ${c.cyan}│${c.reset}`);
+  print(`  ${c.cyan}│${c.reset}${pad("Mode", modeLabel)}${" ".repeat(Math.max(0, width - 24))}${c.cyan}│${c.reset}`);
+  print(`  ${c.cyan}│${c.reset}${pad("PM", `${c.bold}${ask.packageManager}${c.reset}`)}${" ".repeat(Math.max(0, width - 10 - ask.packageManager.length))}${c.cyan}│${c.reset}`);
+  if (plugins.length > 0) {
+    print(`  ${c.cyan}│${c.reset}${pad("Plugins", plugins.join("  "))}${" ".repeat(Math.max(0, width - 10 - plugins.length * 8))}${c.cyan}│${c.reset}`);
   }
-  print(fmt.divider());
+  print(`  ${c.cyan}╰${"─".repeat(width)}╯${c.reset}`);
+  print();
+}
+
+// ─── Success screen ───────────────────────────────────────────────────────────
+function printSuccess(projectName, projectType, ask, pm) {
+  const px = pm === "bun" ? "bunx" : pm === "pnpm" ? "pnpm dlx" : pm === "yarn" ? "yarn dlx" : "npx";
+  const { run: devRunCmd } = PM[pm];
+
+  const title = "  ✦  Your project is ready!";
+  const width = 44;
+
+  print();
+  print(`  ${c.bgreen}╔${"═".repeat(width)}╗${c.reset}`);
+  print(`  ${c.bgreen}║${c.reset}${c.bold}${c.bwhite}${title}${" ".repeat(width - title.length + 2)}${c.bgreen}║${c.reset}`);
+  print(`  ${c.bgreen}╚${"═".repeat(width)}╝${c.reset}`);
+  print();
+  print(`  ${c.bold}${c.bwhite}Next steps:${c.reset}`);
+  print();
+  print(fmt.code(`cd ${projectName}`));
+
+  if (projectType === "auth") {
+    print(fmt.code("cp .env.example .env"));
+    print(fmt.info(`   ${c.gray}→ renseigner JWT_SECRET dans .env${c.reset}`));
+    print(fmt.code("docker compose up -d"));
+    print(fmt.code(`${px} prisma migrate dev --name init`));
+    print(fmt.code(devRunCmd));
+    print();
+    print(`  ${c.magenta}${c.bold}Auth endpoints :${c.reset}`);
+    print(`  ${c.gray}POST${c.reset}  ${c.white}/api/auth/register${c.reset}`);
+    print(`  ${c.gray}POST${c.reset}  ${c.white}/api/auth/login${c.reset}`);
+    print(`  ${c.gray}GET ${c.reset}  ${c.white}/api/auth/me${c.reset}  ${c.gray}(Authorization: Bearer <token>)${c.reset}`);
+  } else {
+    if (ask.prisma) {
+      print(fmt.code("cp .env.example .env"));
+      print(fmt.info(`   ${c.gray}→ DATABASE_URL déjà configurée pour docker-compose${c.reset}`));
+      print(fmt.code("docker compose up -d"));
+      print(fmt.code(`${px} prisma migrate dev --name init`));
+    }
+    print(fmt.code(devRunCmd));
+  }
+
+  if (ask.swagger) {
+    print();
+    print(`  ${c.yellow}◆${c.reset}  Swagger UI  ${c.gray}→${c.reset}  ${c.bold}http://localhost:8000/api-docs${c.reset}`);
+  }
+
+  print();
+  print(`  ${c.gray}${"─".repeat(46)}${c.reset}`);
+  print(`  ${c.gray}Happy coding!  ${c.cyan}✦${c.reset}`);
   print();
 }
 
@@ -228,7 +321,7 @@ function printSummary(projectName, projectType, ask) {
 async function main() {
   banner();
 
-  // 1️⃣ Nom du projet
+  // 1. Nom du projet
   let projectName = process.argv[2];
 
   if (projectName) {
@@ -238,11 +331,12 @@ async function main() {
       process.exit(1);
     }
   } else {
+    sectionHeader("◆  Project name");
     const { name } = await inquirer.prompt([
       {
         type: "input",
         name: "name",
-        message: "Nom du projet :",
+        message: "What is your project name?",
         default: "my-api",
         validate: (v) => validateProjectName(v.trim()) ?? true,
         filter: (v) => v.trim(),
@@ -251,60 +345,61 @@ async function main() {
     projectName = name;
   }
 
-  // 2️⃣ Vérification templates
+  // 2. Vérification templates
   if (!fs.existsSync(templatesDir)) {
-    print(fmt.error(`Dossier de templates introuvable : "${templatesDir}"`));
-    print(fmt.info("Le package est peut-être corrompu. Réinstallez-le."));
+    print(fmt.error(`Templates directory not found: "${templatesDir}"`));
+    print(fmt.info("The package may be corrupted. Please reinstall it."));
     process.exit(1);
   }
 
-  // 3️⃣ Vérification que le répertoire n'existe pas
+  // 3. Vérification que le répertoire n'existe pas
   const projectPath = path.join(process.cwd(), projectName);
   if (fs.existsSync(projectPath)) {
-    print(fmt.error(`Le répertoire "${projectName}" existe déjà.`));
-    print(fmt.info("Choisissez un autre nom ou supprimez le répertoire existant."));
+    print(fmt.error(`Directory "${projectName}" already exists.`));
+    print(fmt.info("Choose another name or delete the existing directory."));
     process.exit(1);
   }
 
-  // 4️⃣ Type de projet
-  print(fmt.divider());
+  // 4. Type de projet
   print();
+  sectionHeader("◆  Project type");
   const { projectType } = await inquirer.prompt([
     {
       type: "list",
       name: "projectType",
-      message: "Type de projet :",
+      message: "Which template do you want?",
       choices: [
         {
-          name: `${c.cyan}${c.bold}Minimal${c.reset}          Express + TS, options au choix`,
+          name: `${c.bcyan}${c.bold}Minimal${c.reset}          ${c.gray}Express + TS, pick your options${c.reset}`,
           value: "minimal",
         },
         {
-          name: `${c.magenta}${c.bold}Starter Kit Auth${c.reset}  JWT complet (register / login / /me)`,
+          name: `${c.magenta}${c.bold}Starter Kit Auth${c.reset}  ${c.gray}JWT complete (register / login / me)${c.reset}`,
           value: "auth",
         },
       ],
     },
   ]);
 
-  // 5️⃣ Options selon le mode
+  // 5. Options
   let ask;
 
   if (projectType === "auth") {
     print();
-    print(fmt.info(`${c.magenta}${c.bold}Starter Kit Auth${c.reset} inclut automatiquement : Prisma · Zod · Swagger · JWT`));
+    print(`  ${c.magenta}${c.bold}Starter Kit Auth${c.reset} includes: ${c.blue}Prisma${c.reset}  ${c.green}Zod${c.reset}  ${c.yellow}Swagger${c.reset}  ${c.magenta}JWT${c.reset}`);
     print();
+    sectionHeader("◆  Package manager");
 
     const { packageManager } = await inquirer.prompt([
       {
         type: "list",
         name: "packageManager",
-        message: "Gestionnaire de paquets :",
+        message: "Which package manager?",
         choices: [
           { name: `${c.bold}npm${c.reset}`, value: "npm" },
           { name: `${c.bold}yarn${c.reset}`, value: "yarn" },
-          { name: `${c.bold}pnpm${c.reset}  ${c.gray}(rapide)${c.reset}`, value: "pnpm" },
-          { name: `${c.bold}bun${c.reset}   ${c.gray}(le plus rapide, runtime alternatif)${c.reset}`, value: "bun" },
+          { name: `${c.bold}pnpm${c.reset}   ${c.gray}fast${c.reset}`, value: "pnpm" },
+          { name: `${c.bold}bun${c.reset}    ${c.gray}fastest · native TS runtime${c.reset}`, value: "bun" },
         ],
         default: "npm",
       },
@@ -313,86 +408,86 @@ async function main() {
 
   } else {
     print();
+    sectionHeader("◆  Package manager & options");
     const answers = await inquirer.prompt([
       {
         type: "list",
         name: "packageManager",
-        message: "Gestionnaire de paquets :",
+        message: "Which package manager?",
         choices: [
           { name: `${c.bold}npm${c.reset}`, value: "npm" },
           { name: `${c.bold}yarn${c.reset}`, value: "yarn" },
-          { name: `${c.bold}pnpm${c.reset}  ${c.gray}(rapide)${c.reset}`, value: "pnpm" },
-          { name: `${c.bold}bun${c.reset}   ${c.gray}(le plus rapide, runtime alternatif)${c.reset}`, value: "bun" },
+          { name: `${c.bold}pnpm${c.reset}   ${c.gray}fast${c.reset}`, value: "pnpm" },
+          { name: `${c.bold}bun${c.reset}    ${c.gray}fastest · native TS runtime${c.reset}`, value: "bun" },
         ],
         default: "npm",
       },
       {
         type: "confirm",
         name: "prisma",
-        message: `Inclure ${c.blue}${c.bold}Prisma${c.reset} ?  ${c.gray}ORM PostgreSQL + migrations${c.reset}`,
+        message: `Include ${c.blue}${c.bold}Prisma${c.reset}?   ${c.gray}PostgreSQL ORM + migrations${c.reset}`,
         default: true,
       },
       {
         type: "confirm",
         name: "zod",
-        message: `Inclure ${c.green}${c.bold}Zod${c.reset} ?     ${c.gray}Validation des données en runtime${c.reset}`,
+        message: `Include ${c.green}${c.bold}Zod${c.reset}?     ${c.gray}Runtime data validation${c.reset}`,
         default: true,
       },
       {
         type: "confirm",
         name: "swagger",
-        message: `Inclure ${c.yellow}${c.bold}Swagger${c.reset} ?  ${c.gray}Docs OpenAPI auto-générées sur /api-docs${c.reset}`,
+        message: `Include ${c.yellow}${c.bold}Swagger${c.reset}?  ${c.gray}OpenAPI docs at /api-docs${c.reset}`,
         default: true,
       },
     ]);
     ask = { ...answers, auth: false };
   }
 
-  // Récapitulatif avant de commencer
+  // Summary + confirmation
   printSummary(projectName, projectType, ask);
 
-  // 6️⃣ Confirmation
   const { confirmed } = await inquirer.prompt([
     {
       type: "confirm",
       name: "confirmed",
-      message: "Créer le projet ?",
+      message: "Create project?",
       default: true,
     },
   ]);
 
   if (!confirmed) {
     print();
-    print(fmt.warn("Annulé. Aucun fichier créé."));
+    print(fmt.warn("Cancelled. No files were created."));
     print();
     process.exit(0);
   }
 
   print();
+  sectionHeader("◆  Scaffolding");
 
-  // Commandes selon le package manager
   const pm = ask.packageManager;
-  const { install: installCmd, installDev: installDevCmd, run: devRunCmd } = PM[pm];
+  const { install: installCmd, installDev: installDevCmd } = PM[pm];
 
   try {
-    // 7️⃣ Création du dossier
-    let spin = spinner(`Création du projet ${c.bold}${projectName}${c.reset}...`);
+    // Création du dossier + copie template
+    let spin = spinner(`Creating ${c.bold}${projectName}${c.reset}`);
     fs.mkdirSync(projectPath, { recursive: true });
     copyRecursive(templatesDir, projectPath);
-    spin.succeed(`Dossier ${c.bold}${projectName}/${c.reset} créé`);
+    spin.succeed(`Project folder ${c.bold}${projectName}/${c.reset} created`);
 
-    // 8️⃣ Overlay auth
+    // Overlay auth
     if (projectType === "auth") {
       if (!fs.existsSync(templatesAuthDir)) {
-        print(fmt.error(`Dossier templates-auth introuvable : "${templatesAuthDir}"`));
+        print(fmt.error(`Auth templates not found: "${templatesAuthDir}"`));
         process.exit(1);
       }
-      spin = spinner("Ajout des fichiers d'authentification...");
+      spin = spinner("Applying auth overlay");
       copyRecursive(templatesAuthDir, projectPath);
-      spin.succeed("Fichiers auth copiés");
+      spin.succeed("Auth files applied");
     }
 
-    // 9️⃣ Retrait des options non choisies
+    // Retrait des options non choisies
     if (!ask.prisma) {
       for (const p of [
         path.join(projectPath, "prisma"),
@@ -414,17 +509,16 @@ async function main() {
       removeSwaggerFromApp(projectPath);
     }
 
-    // 🔟 Config
-    spin = spinner("Configuration du projet...");
+    // Config
+    spin = spinner("Configuring project");
     updatePackageJson(projectPath, projectName, pm);
     generateEnvExample(projectPath, ask);
     generateGitignore(projectPath);
     if (ask.prisma) generateDockerCompose(projectPath);
-    spin.succeed("package.json · .env.example · .gitignore configurés");
+    spin.succeed("package.json · .env.example · .gitignore ready");
 
-    // 1️⃣1️⃣ Dépendances
+    // Dépendances
     const deps    = [...PACKAGES.base.deps];
-    // bun exécute TypeScript nativement — ts-node et nodemon ne sont pas nécessaires
     const devDeps = [
       ...PACKAGES.base.devDeps.common,
       ...(pm === "bun" ? [] : PACKAGES.base.devDeps.node),
@@ -434,60 +528,20 @@ async function main() {
     if (ask.zod)       deps.push(...PACKAGES.zod.deps);
     if (ask.auth)    { deps.push(...PACKAGES.auth.deps);     devDeps.push(...PACKAGES.auth.devDeps); }
 
-    print(fmt.step(`Installation des dépendances via ${c.bold}${pm}${c.reset}...`));
     print();
-    runOrCleanup(`${installCmd} ${deps.join(" ")}`,         { cwd: projectPath, stdio: "inherit" }, projectPath, projectName);
-    runOrCleanup(`${installDevCmd} ${devDeps.join(" ")}`,   { cwd: projectPath, stdio: "inherit" }, projectPath, projectName);
+    sectionHeader(`◆  Installing dependencies via ${pm}`);
+    print();
+    runOrCleanup(`${installCmd} ${deps.join(" ")}`,       { cwd: projectPath, stdio: "inherit" }, projectPath, projectName);
+    runOrCleanup(`${installDevCmd} ${devDeps.join(" ")}`, { cwd: projectPath, stdio: "inherit" }, projectPath, projectName);
     print();
 
-    // 1️⃣2️⃣ Succès
-    print(fmt.divider());
-    print();
-    print(`${c.green}${c.bold}  ✔  Projet "${projectName}" prêt !${c.reset}`);
-    print();
-    print(`${c.bold}  Prochaines étapes :${c.reset}`);
-    print();
-    print(fmt.code(`cd ${projectName}`));
-
-    // Commande prisma selon le pm (bun utilise bunx, sinon npx)
-    const px = pm === "bun" ? "bunx" : pm === "pnpm" ? "pnpm dlx" : pm === "yarn" ? "yarn dlx" : "npx";
-
-    if (projectType === "auth") {
-      print(fmt.code("cp .env.example .env"));
-      print(fmt.info(`   ${c.gray}→ renseigner JWT_SECRET (DATABASE_URL déjà configurée pour docker-compose)${c.reset}`));
-      print(fmt.code("docker compose up -d"));
-      print(fmt.code(`${px} prisma generate`));
-      print(fmt.code(`${px} prisma migrate dev --name init`));
-      print(fmt.code(devRunCmd));
-      print();
-      print(`  ${c.magenta}${c.bold}Endpoints auth :${c.reset}`);
-      print(fmt.info(`${c.bold}POST${c.reset}  /api/auth/register`));
-      print(fmt.info(`${c.bold}POST${c.reset}  /api/auth/login`));
-      print(fmt.info(`${c.bold}GET${c.reset}   /api/auth/me  ${c.gray}(Authorization: Bearer <token>)${c.reset}`));
-    } else {
-      if (ask.prisma) {
-        print(fmt.code("cp .env.example .env"));
-        print(fmt.info(`   ${c.gray}→ DATABASE_URL déjà configurée pour docker-compose${c.reset}`));
-        print(fmt.code("docker compose up -d"));
-        print(fmt.code(`${px} prisma generate`));
-      }
-      print(fmt.code(devRunCmd));
-    }
-
-    if (ask.swagger) {
-      print();
-      print(fmt.info(`${c.yellow}Swagger UI${c.reset} disponible sur ${c.bold}http://localhost:8000/api-docs${c.reset}`));
-    }
-
-    print();
-    print(fmt.divider());
-    print(`${c.gray}  Bon développement ! 🚀${c.reset}`);
-    print();
+    // Success
+    printSuccess(projectName, projectType, ask, pm);
 
   } catch (err) {
-    print(fmt.error(`Erreur inattendue : ${err.message || err}`));
+    print(fmt.error(`Unexpected error: ${err.message || err}`));
     if (fs.existsSync(projectPath)) {
-      print(fmt.warn("Nettoyage..."));
+      print(fmt.warn("Cleaning up..."));
       fs.rmSync(projectPath, { recursive: true, force: true });
     }
     process.exit(1);
@@ -495,6 +549,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(fmt.error(`Erreur fatale : ${err.message || err}`));
+  console.error(fmt.error(`Fatal error: ${err.message || err}`));
   process.exit(1);
 });

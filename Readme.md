@@ -1,8 +1,8 @@
-# create-express-app
+# simply-express
 
 **CLI Express.js + TypeScript production-ready — en moins d'une minute.**
 
-`@theshvdow/create-express-app` génère un projet Express.js moderne avec Clean Architecture, Prisma v7, Zod, Swagger et un système d'authentification JWT complet — le tout via un CLI interactif.
+`@theshvdow/simply-express` génère un projet Express.js moderne avec Clean Architecture, Prisma v7, Zod, Swagger et un système d'authentification JWT complet — le tout via un CLI interactif.
 
 ---
 
@@ -10,16 +10,16 @@
 
 ```bash
 # npm
-npx @theshvdow/create-express-app mon-api
+npx @theshvdow/simply-express mon-api
 
 # yarn
-yarn dlx @theshvdow/create-express-app mon-api
+yarn dlx @theshvdow/simply-express mon-api
 
 # pnpm
-pnpm dlx @theshvdow/create-express-app mon-api
+pnpm dlx @theshvdow/simply-express mon-api
 
 # bun
-bunx @theshvdow/create-express-app mon-api
+bunx @theshvdow/simply-express mon-api
 ```
 
 ---

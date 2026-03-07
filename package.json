@@ -1,9 +1,9 @@
 {
-  "name": "@theshvdow/create-express-app",
-  "version": "1.1.3",
-  "description": "Un générateur de projet Express.js professionnel avec TypeScript, Prisma, Zod, Swagger, architecture modulaire et clean.",
+  "name": "@theshvdow/simply-express",
+  "version": "1.1.4",
+  "description": "CLI Express.js + TypeScript production-ready — scaffold a clean architecture project in seconds.",
   "bin": {
-    "create-express-app": "bin/cli.js"
+    "simply-express": "bin/cli.js"
   },
   "type": "module",
   "main": "bin/cli.js",
