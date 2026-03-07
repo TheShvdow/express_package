@@ -1,0 +1,6 @@
+.git/
+.claude/
+.vscode/
+CONTRIBUTING.md
+*.md
+!Readme.md

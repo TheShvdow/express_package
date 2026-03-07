@@ -69,7 +69,7 @@ Après l’exécution, vous obtiendrez une structure de projet comme suit :
     │  │  └─ swagger.config.ts
     │  └─ usecases/
     │     └─ CreateUserUseCase.ts
-    ├─ infrastructre/
+    ├─ infrastructure/
     │  ├─ http/
     │  │  ├─ controllers/
     │  │  │  └─ UserController.ts
@@ -103,10 +103,10 @@ Si Prisma est activé :
 
 ### ⚙️ Requirements
 
-- Node.js v14 ou supérieur
+- Node.js v20 ou supérieur (v22 recommandé)
 - npm, yarn ou pnpm
-- prisma (si activé) v6.X
-- Zod (si activé) v3.X
+- prisma (si activé)
+- Zod (si activé)
 - Swagger (si activé) v6.X
 
 ---
@@ -116,15 +116,13 @@ Si Prisma est activé :
 - `npm run dev` : Démarrer le serveur en mode développement avec rechargement à chaud
 - `npm run build` : Compiler le projet TypeScript
 - `npm start` : Démarrer le serveur en mode production
-- `npm run lint` : Linter le code avec ESLint
-- `npm run test` : Exécuter les tests unitaires
-- `npm run swagger` : Générer la documentation Swagger (si Swagger est activé)
-- `npm run prisma:generate` : Générer le client Prisma (si Prisma est activé)
+- `npm run prisma:generate` : Générer le client Prisma (si Prisma est activé) — **obligatoire avant le premier démarrage**
 - `npm run prisma:migrate` : Appliquer les migrations Prisma (si Prisma est activé)
+- `npm run prisma:studio` : Ouvrir Prisma Studio (si Prisma est activé)
 
 ### Swagger UI
 
-Si Swagger est activé, la documentation sera accessible à l’adresse : `http://localhost:3000/api-docs`
+Si Swagger est activé, la documentation sera accessible à l’adresse : `http://localhost:8000/api-docs`
 
 ---
 

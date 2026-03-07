@@ -1,15 +1,24 @@
 {
   "name": "@theshvdow/create-express-app",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Un générateur de projet Express.js professionnel avec TypeScript, Prisma, Zod, Swagger, architecture modulaire et clean.",
   "bin": {
     "create-express-app": "bin/cli.js"
   },
   "type": "module",
   "main": "bin/cli.js",
+  "files": [
+    "bin/",
+    "templates/",
+    "templates-auth/",
+    "Readme.md"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "node bin/cli.js",
-    "publish": "npm publish --access public"
+    "release": "npm version minor && npm publish --access public"
   },
   "publishConfig": {
     "access": "public"
@@ -21,8 +30,21 @@
     "prisma",
     "zod",
     "swagger",
-    "cli"
+    "cli",
+    "auth",
+    "jwt",
+    "bun",
+    "starter-kit",
+    "clean-architecture"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheShvdow/express_package"
+  },
+  "homepage": "https://github.com/TheShvdow/express_package#readme",
+  "bugs": {
+    "url": "https://github.com/TheShvdow/express_package/issues"
+  },
   "author": "TheShvdow",
   "license": "MIT",
   "dependencies": {

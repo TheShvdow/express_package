@@ -123,6 +123,16 @@ const options: swaggerJsdoc.Options = {
         },
       },
       responses: {
+        BadRequest: {
+          description: "Requête invalide",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Error",
+              },
+            },
+          },
+        },
         NotFound: {
           description: "Ressource non trouvée",
           content: {
@@ -170,12 +180,16 @@ const options: swaggerJsdoc.Options = {
         name: "Users",
         description: "Opérations liées aux utilisateurs",
       },
+      {
+        name: "Auth",
+        description: "Authentification (register, login, profil)",
+      },
     ],
   },
   apis: [
-    "./src/infrastructre/http/routers/**/*.{ts,js}",
+    "./src/infrastructure/http/routers/**/*.{ts,js}",
     "./src/core/swagger/schemas/**/*.{ts,js}",
-    "./dist/infrastructre/http/routers/**/*.js",
+    "./dist/infrastructure/http/routers/**/*.js",
     "./dist/core/swagger/schemas/**/*.js",
   ],
 };
@@ -188,8 +202,9 @@ export const setupSwagger = (app: Express): void => {
   console.log("📁 API paths:", options.apis);
 
   // Vérifier si la spec contient des routes
-  if (swaggerSpec && swaggerSpec.paths) {
-    console.log("✅ Swagger spec loaded with", Object.keys(swaggerSpec.paths).length, "routes");
+  const spec = swaggerSpec as Record<string, unknown>;
+  if (spec && spec['paths']) {
+    console.log("✅ Swagger spec loaded with", Object.keys(spec['paths'] as object).length, "routes");
   } else {
     console.warn("⚠️  No routes found in Swagger spec. Check your JSDoc comments.");
   }
