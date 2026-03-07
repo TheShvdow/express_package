@@ -1,152 +1,148 @@
-# 📦 create-express-app  
+# create-express-app
 
-### Générateur professionnel de projets **Express.js + TypeScript + Prisma + Zod + Swagger**
+**CLI Express.js + TypeScript production-ready — en moins d'une minute.**
 
-`@theshvdow/create-express-app` est un CLI complet permettant de créer en quelques secondes un projet Express.js moderne, structuré, scalable et prêt pour la production.
-Il inclut :
-
-- 🚀 Express.js + TypeScript  
-- 🏗️ Architecture modulaire (controllers, services, repositories)
-- 🛡️ Zod pour la validation
-- 🗄️ Prisma (optionnel)
-- 📘 Swagger / OpenAPI généré automatiquement
-- 🧪 Tests intégrés
-- 🛠️ CLI interactif
-- 🐳 Dockerfile prêt à l’emploi
+`@theshvdow/create-express-app` génère un projet Express.js moderne avec Clean Architecture, Prisma v7, Zod, Swagger et un système d'authentification JWT complet — le tout via un CLI interactif.
 
 ---
 
-## 📥 Installation
-
-Ne pas Utiliser `npm i @theshvdow/create-express-app` pour installer ce package il fonctionnera pas.
-
-Au lieu de cela, utilisez `npx` pour exécuter le générateur directement sans installation globale :
+## Démarrage rapide
 
 ```bash
-npx @theshvdow/create-express-app <nom-du-projet>
+# npm
+npx @theshvdow/create-express-app mon-api
+
+# yarn
+yarn dlx @theshvdow/create-express-app mon-api
+
+# pnpm
+pnpm dlx @theshvdow/create-express-app mon-api
+
+# bun
+bunx @theshvdow/create-express-app mon-api
 ```
 
 ---
 
-## 🚀 Utilisation
+## Deux modes disponibles
 
-```bash
-npx @theshvdow/create-express-app <nom-du-projet>
+### Minimal
+
+Un projet Express + TypeScript propre avec les options de ton choix :
+
+- Prisma v7 + PostgreSQL (docker-compose inclus)
+- Zod — validation des données
+- Swagger / OpenAPI
+
+### Starter Kit Auth
+
+Tout le mode Minimal + un système d'authentification JWT complet, prêt à l'emploi :
+
+```text
+POST  /api/auth/register
+POST  /api/auth/login
+GET   /api/auth/me        (Authorization: Bearer <token>)
 ```
 
-Vous serez guidé par une série de questions :
+Inclut : bcrypt, jsonwebtoken, Zod validators, middleware auth, Prisma User model.
 
-- Nom du projet
+---
 
-- Choix du gestionnaire de package (npm / yarn / pnpm)
-
-- Activer Prisma ? (oui / non)
-
-- Activer Zod ? (oui / non)
-
-- Installer Swagger ? (oui / non)
-
-### Structure du projet
-
-Après l’exécution, vous obtiendrez une structure de projet comme suit :
+## Structure générée
 
 ```
-    
-    
-    src/
-    ├─ application/
-    │  └─ services/
-    │     └─ UserService.ts
-    ├─ core/
-    │  ├─ entities/
-    │  │  └─ User.ts
-    │  ├─ errors/
-    │  │  └─ AppError.ts
-    │  ├─ swagger/
-    │  │  ├─ schemas/
-    │  │  │  └─ common.schemas.ts
-    │  │  ├─ index.ts
-    │  │  └─ swagger.config.ts
-    │  └─ usecases/
-    │     └─ CreateUserUseCase.ts
-    ├─ infrastructure/
-    │  ├─ http/
-    │  │  ├─ controllers/
-    │  │  │  └─ UserController.ts
-    │  │  ├─ middleware/
-    │  │  │  ├─ ErrorHandler.ts
-    │  │  │  └─ validator.ts
-    │  │  └─ routers/
-    │  │     ├─ index.ts
-    │  │     └─ user.routes.ts
-    │  ├─ prisma/
-    │  │  ├─ client.ts
-    │  │  └─ UserRepositoryPrisma.ts
-    │  └─ validators/
-    │     └─ UserValidator.ts
-    ├─ public/
-    │  └─ .gitkeep
-    ├─ types/
-    │  └─ UserRepository.ts
-    ├─ utils/
-    │  └─ logger.ts
-    ├─ app.ts
-    └─ server.ts
-
-
-
-Si Prisma est activé :
-    ├── prisma/
-    │   ├── schema.prisma
-    │   └── migrations/
+src/
+├─ application/
+│  └─ services/
+├─ core/
+│  ├─ errors/
+│  ├─ swagger/          (si Swagger activé)
+│  └─ usecases/
+├─ infrastructure/
+│  ├─ http/
+│  │  ├─ controllers/
+│  │  ├─ middleware/
+│  │  └─ routers/
+│  ├─ prisma/           (si Prisma activé)
+│  └─ validators/
+├─ utils/
+│  └─ logger.ts         (Pino JSON)
+├─ app.ts
+└─ server.ts
 ```
 
-### ⚙️ Requirements
+---
 
-- Node.js v20 ou supérieur (v22 recommandé)
-- npm, yarn ou pnpm
-- prisma (si activé)
-- Zod (si activé)
-- Swagger (si activé) v6.X
+## Prérequis
+
+| Outil           | Version                            |
+| --------------- | ---------------------------------- |
+| Node.js         | >= 20.19.0 (requis par Prisma v7)  |
+| Package manager | npm · yarn · pnpm · bun            |
+| Docker          | Optionnel — pour PostgreSQL local  |
 
 ---
 
 ## Scripts disponibles
 
-- `npm run dev` : Démarrer le serveur en mode développement avec rechargement à chaud
-- `npm run build` : Compiler le projet TypeScript
-- `npm start` : Démarrer le serveur en mode production
-- `npm run prisma:generate` : Générer le client Prisma (si Prisma est activé) — **obligatoire avant le premier démarrage**
-- `npm run prisma:migrate` : Appliquer les migrations Prisma (si Prisma est activé)
-- `npm run prisma:studio` : Ouvrir Prisma Studio (si Prisma est activé)
-
-### Swagger UI
-
-Si Swagger est activé, la documentation sera accessible à l’adresse : `http://localhost:8000/api-docs`
+```bash
+npm run dev      # Démarre avec hot-reload (nodemon / bun --watch)
+npm run build    # Compile TypeScript → dist/
+npm start        # Lance le build de production
+```
 
 ---
 
-## 💡 Personnalisation
+## Premiers pas après génération
 
-Vous pouvez facilement personnaliser et étendre le projet selon vos besoins. La structure modulaire facilite l’ajout de nouvelles fonctionnalités, routes, services, etc.
+**Mode Minimal avec Prisma :**
+
+```bash
+cd mon-api
+cp .env.example .env
+docker compose up -d
+npx prisma generate
+npm run dev
+```
+
+**Starter Kit Auth :**
+
+```bash
+cd mon-api
+cp .env.example .env
+# Définir JWT_SECRET dans .env
+docker compose up -d
+npx prisma generate
+npx prisma migrate dev --name init
+npm run dev
+```
+
+Swagger UI disponible sur `http://localhost:8000/api-docs` (si activé).
 
 ---
 
-## 🤝 Contribution
+## Ce qui est inclus
 
-Les contributions sont les bienvenues ! N’hésitez pas à ouvrir des issues ou des pull requests pour améliorer ce projet.
+| Fonctionnalité              | Minimal   | Starter Kit Auth |
+| --------------------------- | --------- | ---------------- |
+| Express + TypeScript        | ✔         | ✔                |
+| Clean Architecture          | ✔         | ✔                |
+| Pino logger JSON            | ✔         | ✔                |
+| Prisma v7 + PrismaPg        | optionnel | ✔                |
+| Docker Compose PostgreSQL   | optionnel | ✔                |
+| Zod validation              | optionnel | ✔                |
+| Swagger / OpenAPI           | optionnel | ✔                |
+| Auth JWT (register/login/me)| ✗         | ✔                |
+| bcrypt + middleware Bearer  | ✗         | ✔                |
 
 ---
 
-### Support
+## Contribution
 
-Pour toute question ou problème, veuillez ouvrir une issue sur le dépôt GitHub.
-👉 [https://www.npmjs.com/package/@theshvdow/create-express-app](https://github.com/TheShvdow/express_package/issues)
+Issues et PRs bienvenus sur [GitHub](https://github.com/TheShvdow/express_package).
 
-## 📄 Licence
+---
 
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
+## Licence
 
-All rights reserved © 2024 TheShvdow
-
-### Merci d’utiliser `@theshvdow/create-express-app` ! 🚀
+MIT — © 2025 [TheShvdow](https://github.com/TheShvdow)
